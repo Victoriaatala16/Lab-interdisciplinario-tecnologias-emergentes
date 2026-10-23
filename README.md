@@ -2,7 +2,7 @@
 
 Proyecto de investigación aplicada que busca abordar la falta de trazabilidad en tiempo real de los visitantes que recorren los senderos de alta montaña del Parque Mahuida (La Reina, Santiago), zona con el porcentaje más alto de riesgo de deslizamientos de la Región Metropolitana. A partir de datos oficiales, entrevistas a guardaparques y registro en terreno, se analiza el sistema actual de control de acceso y seguimiento, y se exploran alternativas tecnológicas que permitan monitorear en tiempo real la ubicación y estado de las personas en ruta.
 
-La propuesta resultante es un **Sistema de Trazabilidad y Alerta en Montaña** para el sendero Cerro La Cruz: el senderista lleva un pequeño dispositivo (clip BLE), a lo largo del sendero hay tótems solares que registran su paso y se comunican por LoRa (915 MHz), y en la caseta de guardaparques una base con un PC muestra por dónde va cada persona, calcula atrasos y recibe las alertas, sin depender de la señal celular.
+La propuesta resultante es un **Sistema de Trazabilidad y Alerta en Montaña** para el sendero Cerro La Cruz: el senderista lleva un dispositivo, a lo largo del sendero hay tótems solares que registran su paso y se comunican por LoRa (915 MHz), y en la caseta de guardaparques una base con un PC muestra por dónde va cada persona, calcula atrasos y recibe las alertas, sin depender de la señal celular.
 
 ## Integrantes
 
