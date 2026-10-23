@@ -612,20 +612,7 @@ Cada prototipo se evaluó según cinco criterios:
 * Supuestos del chequeo: ráfaga de 100 km/h en los puntos bajos y de 130 km/h desde el cruce hacia arriba; aluminio 6063-T5 (fy 110 MPa), aceptando hasta 73 MPa; empotramiento por el método de Broms y vuelco en la columna.
 * Acotación: es un chequeo preliminar. Falta validar las ráfagas de diseño y los cálculos con el profesor o un ingeniero (NCh 432).
 
-#### Materiales
 
-* **Usados:** aluminio 6063 con pintura en polvo color óxido; pernos inox A4 con arandelas de nylon (evitan la corrosión galvánica); cable inox; malla electrosoldada galvanizada; piedra del lugar; colihue seco; policarbonato UV.
-* **Descartados:** acero corten (la Silueta pesaría 22 kg en vez de 5), hormigón, madera tallada o impregnada, cuerda Dyneema (se estira con carga permanente) y batería de litio en la cumbre.
-
-#### Historia del lugar
-
-* **Mawida:** del mapuzungun, "monte" o "montaña"; Lorenzo Aillapán lo interpreta como "universo montañoso". Es Reserva Natural Municipal (140 ha) desde diciembre de 2020.
-* **Incas, mapochoes y arrieros:** hay adoratorios incas con pircas en la Sierra de Ramón (Quebrada de Ramón, ≈1.450 msnm).
-* **Flora:** litre, quillay, puyas y guayacán (endémico y vulnerable).
-* **Fauna:** vizcacha, zorro culpeo, degú, cóndor, gallina ciega, tiuque, lagartija parda de Santiago y araña pollito.
-
-* Recomendación para el firmware: encender la pantalla y los LEDs solo al detectar un clip y nunca de noche, para no molestar a la fauna nocturna.
-* Archivos: plantillas 1:10 con instrucciones de armado en [`Prototipos/Plantillas_Maquetas_Checkpoints_v2.1_1-10.pdf`](Prototipos/Plantillas_Maquetas_Checkpoints_v2.1_1-10.pdf) y fotos de las maquetas armadas en [`Prototipos/Fotos_Maquetas/`](Prototipos/Fotos_Maquetas)
 
 ### 4. Dispositivo personal
 
