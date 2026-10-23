@@ -1,5 +1,4 @@
-# Tecnologías Emergentes enfocadas en Seguridad de Visitantes
-Investigación de proyecto basado en mejorar el seguimiento y la seguridad de visitantes en los senderos de alta montaña del Parque Mahuida, en la comuna de La Reina, Santiago de Chile.
+## Investigación de proyecto basado en mejorar el seguimiento y la seguridad de visitantes en los senderos de alta montaña del Parque Mahuida, en la comuna de La Reina, Santiago de Chile.
 
 Proyecto de investigación aplicada que busca abordar la falta de trazabilidad en tiempo real de los visitantes que recorren los senderos de alta montaña del Parque Mahuida (La Reina, Santiago), zona con el porcentaje más alto de riesgo de deslizamientos de la Región Metropolitana. A partir de datos oficiales, entrevistas a guardaparques y registro en terreno, se analiza el sistema actual de control de acceso y seguimiento, y se exploran alternativas tecnológicas que permitan monitorear en tiempo real la ubicación y estado de las personas en ruta.
 
@@ -674,16 +673,6 @@ De la caseta a la cruz hay 6,51 km por sendero y +1.662 m de desnivel. CP5 y CP6
 
 * Acotación: las distancias y alturas salen del perfil del terreno; los enlaces se confirman recién con las pruebas en terreno de la fase 1.
 
-## Próximos pasos
-
-* Comprar la fase 1 del BOM y probar en terreno el alcance LoRa y la detección BLE: CP5 ↔ CP4, CP4 ↔ caseta, CP6 ↔ CP5, cruz ↔ CP5, y CP3 y CP2 ↔ caseta.
-* Confirmar con el parque la caseta de registro, su energía y la antena de 4 m, y elegir entre las opciones B y C.
-* Desarrollar la detección automática por proximidad (BLE) e integrar la red LoRa con la central de monitoreo.
-* Validar las ráfagas de diseño y los cálculos estructurales con el profesor o un ingeniero (NCh 432).
-* Pedir permisos al parque: hoyos, piedra suelta, sitios arqueológicos y uso del camino de servicio hasta la antena.
-* Confirmar el ave de la Silueta, qué hay hoy en la cumbre y la lectura religiosa de la cruz; buscar asesoría sobre rayos.
-* Pesar colihue, batería, panel y malla, y cotizar corte láser y pintura en polvo.
-* Elegir el formato del dispositivo personal.
 
 ## Bibliografía
 
