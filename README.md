@@ -28,6 +28,7 @@ La propuesta resultante es un **Sistema de Trazabilidad y Alerta en Montaña** p
 | Etapa | Qué se hizo | Resultado |
 |---|---|---|
 | Encargo 1 | Exploración de los 3 ámbitos propuestos por la Municipalidad de La Reina | Se elige el ámbito de patrimonio y turismo: los senderos del Parque Mahuida |
+| Encargo 2 | Segunda exploración de los 3 ámbitos, con datos y enmarques nuevos | Envejecimiento de la comuna, Mahuida frente a Aguas de Ramón y canales de participación poco activos |
 | Avance 20-08-2026 | Datos oficiales y entrevistas a dos guardaparques | No existe seguimiento en ruta: "no sabemos en vivo" |
 | Encargos 3 y 4 | De dato a insight, entrevistas a 4 senderistas, datos nuevos y stakeholders | Problema definido |
 | Caso y soluciones | Cruce con UTMB LiveTrail y Disney MagicBand | Primera idea: pulsera + tótems solo en Cerro La Cruz |
@@ -37,6 +38,9 @@ La propuesta resultante es un **Sistema de Trazabilidad y Alerta en Montaña** p
 | Encargo 8 + maquetas | Primera prueba electrónica, maquetas 1:10 y chequeo de viento | 7 checkpoints viables en aluminio y piedra del lugar |
 | Dispositivo personal | 7 formatos probados sobre el cuerpo | Opciones para llevar el clip |
 | Red LoRa (Rev. 3) | Ubicación final de los tótems según el terreno | 6 radios y ningún repetidor |
+| Certamen 2 | Red de trazabilidad y check-in pasivo | Propuesta en tres partes (dispositivo, tótems y caseta) y primeros prototipos |
+| Nuevo tótem | Maquetas de colihue con sombra y asiento | Tótem de paso y tótem de cumbre, que reemplazan a los 7 checkpoints |
+| Encargos 9 y 10 | Planimetría Rev. 4, maqueta láser y prototipos estético y funcional | 14 radios (13 tótems y un repetidor); demostración con 2 tótems y la interfaz de la caseta |
 
 ## Punto de partida · Encargo 1
 
@@ -52,6 +56,18 @@ De esta exploración se eligió el ámbito de **patrimonio y turismo urbano**, e
 
 * Acotación: el encargo se trabajó con los conceptos vistos en clase: situación problemática → problema → pregunta de investigación → objetivos; enmarques según *Frame Innovation* (Kees Dorst, 2015); y las cuatro etapas cognitivas dato → información → hallazgo → insight.
 * Archivo: [`encargos/Encargo_1/Encargo_1.pdf`](encargos/Encargo_1/Encargo_1.pdf)
+
+## Encargo 2 · Segunda exploración de situaciones
+
+Se volvieron a recorrer los tres ámbitos de la Municipalidad de La Reina con situaciones nuevas, cada una con datos de evidencia y dos enmarques.
+
+| Ámbito | Situación | Datos | Enmarques |
+|---|---|---|---|
+| Salud pública | La Reina envejece más rápido que sus comunas vecinas y que otras comunas de Santiago | El 17,1% de la población son adultos mayores (proyección INE 2024), más que en la Región Metropolitana (12,5%) y en el país (13,8%). El índice de adultos mayores subió de 83,5 en 2017 a 101,6 en 2024: hoy hay más adultos mayores que menores de 15 años. En junio de 2026 se eliminó la lista de espera de cirugías menores gracias al Servicio de Alta Resolutividad (SAR) | (1) El envejecimiento es sostenido y acelerado: el problema está en la población. (2) No se sabe si el sistema de salud está dimensionado para ese ritmo: el problema está en la capacidad de respuesta |
+| Patrimonio y turismo urbano | Mahuida tiene más hectáreas y cobra menos que Aguas de Ramón, su comparable directo en la precordillera, pero no logra instalarse como un destino al que "hay que ir sí o sí" | Entrada de $1.000 en Mahuida frente a $1.500 en Aguas de Ramón; reseñas de visitantes llaman "fraude" al cobro adicional de $7.000 por el "zoológico" interno; calificación de 3,3/5 en plataformas de turismo | (1) Los cobros internos generan desconfianza: el problema está en la transparencia. (2) El parque no logra comunicar su valor frente a la competencia: el problema está en el posicionamiento externo |
+| Participación ciudadana | La comuna tiene plataformas formales de participación (lareinaparticipa.cl), pero no parecen mantenerse activas ni actualizadas | Las consultas destacadas de la plataforma siguen siendo las de 2020-2021; el COSOC se renueva cada 4 años (período 2023-2027) y solo incluye a organizaciones ya constituidas; demandas recogidas en los talleres del PLADECO, como ampliar los tipos de reciclaje, seguían pendientes años después | (1) Los canales existen, pero pierden vigencia y visibilidad: el problema es la actualización. (2) Los mecanismos privilegian a quienes ya participan: el problema es quién queda dentro y quién queda fuera |
+
+* Archivo: presentación en [`encargos/Encargo_2/`](encargos/Encargo_2)
 
 ## Avance 20-08-2026
 
@@ -661,6 +677,197 @@ De la caseta a la cruz hay 6,51 km por sendero y +1.662 m de desnivel. CP5 y CP6
 * Acotación: las distancias y alturas salen del perfil del terreno; los enlaces se confirman recién con las pruebas en terreno de la fase 1.
 
 
+## Certamen 2 · Red de trazabilidad y check-in pasivo (30-10-2026)
+
+La segunda presentación retoma el problema y el levantamiento en terreno, y presenta la propuesta con su arquitectura y los primeros prototipos del tótem, del dispositivo y de la planimetría.
+
+### 1. Propuesta
+
+Implementar un sistema autónomo de seguimiento por tramos para senderistas de alta montaña en el Parque Mahuida, que registre su avance en puntos críticos, detecte atrasos en los tiempos proyectados y alerte oportunamente ante emergencias sin depender de conectividad comercial ni celular.
+
+| Pilar | Cómo funciona |
+|---|---|
+| Check-in pasivo | El visitante lleva un dispositivo liviano; al pasar junto a un tótem su paso se registra solo, sin usar el teléfono ni pantallas |
+| Monitoreo por excepción | Los guardaparques no vigilan una pantalla todo el tiempo: el sistema alerta solo si alguien excede el tiempo estimado para llegar al siguiente punto |
+| Canal de largo alcance | Los tótems y la caseta se comunican por radiofrecuencia LoRa, que supera los puntos ciegos de las quebradas |
+
+### 2. Arquitectura
+
+| Parte | Qué hace | Componentes |
+|---|---|---|
+| Senderista: dispositivo personal | Identificador liviano y de bajo consumo que emite una señal constante de proximidad, con botón físico de auxilio (SOS) | ESP32 de bajo consumo, botón SOS, indicador luminoso y batería LiPo recargable |
+| Sendero: red de tótems autónomos | Instalados en puntos críticos; registran el paso y miden presión y temperatura | Heltec LoRa (915 MHz), sensor BME280 y respaldo solar |
+| Central: caseta de guardaparques | Cruza los registros de entrada y salida, muestra la última ubicación conocida de cada persona y coordina con Seguridad Municipal o Socorro Andino ante emergencias | Antena receptora y computador con los registros y tiempos acumulados |
+
+### 3. Detección pasiva y seguridad activa
+
+* **Detección de paso sin contacto:** registro automático al acercarse a 2-3 m del tótem, confirmación con luz verde y sonido, y un filtro que evita registros duplicados durante los descansos.
+* **Botón de emergencia (SOS):** se activa a mano desde el dispositivo, enciende luces rojas y una alerta sonora con la identificación del usuario, y la alarma sigue activa hasta que el personal atiende la emergencia.
+
+### 4. Prototipos presentados
+
+| Prototipo | Qué se mostró |
+|---|---|
+| Tótem | Maquetas de colihue con asiento (ver la sección siguiente) |
+| Dispositivo portátil | Las maquetas a escala real probadas sobre el cuerpo (Encargo 8) |
+| Planimetría | Mapa del sendero con los tótems y plano topográfico |
+
+* Acotación: el esquema de arquitectura de la presentación todavía muestra la versión del Encargo 7 (pulsera, cámara en el último tótem y panel con batería 18650), anterior a los cambios del BOM v1.1. El SOS, que en la arquitectura 1.1 había pasado al tótem, vuelve al dispositivo.
+* Archivo: [`encargos/Certamen_2/certamen 2.pdf`](encargos/Certamen_2/certamen%202.pdf)
+
+## Tótem de paso y tótem de cumbre (30-10 al 09-11-2026)
+
+Los 7 checkpoints del Encargo 8 se reemplazaron por un concepto nuevo: tótems que, además de registrar el paso, sirven para descansar a la sombra.
+
+### 1. Maquetas de exploración (30-10-2026)
+
+Se probaron cuatro formas en maquetas de colihue y madera, todas con asiento y sombra:
+
+| Forma | Descripción |
+|---|---|
+| Abanico | Colihues que salen en radio desde un poste central, con una banca curva |
+| Cúpula | Colihues curvados que se cruzan sobre una banca circular |
+| Árbol | Un tronco de colihues que se abre arriba en arcos, con una banca curva al lado |
+| Concha | Un muro curvo de colihues verticales que da sombra |
+
+* Fotos: [`Prototipos/Fotos_Maquetas_3/`](Prototipos/Fotos_Maquetas_3)
+
+### 2. Concepto elegido (09-11-2026)
+
+* **Tótem de paso:** va a lo largo del sendero. Es una estructura curva de arcos de colihue en abanico, con troncos al medio para sentarse. Da sombra para descansar, o se pasa de largo.
+* **Tótem de cumbre:** va en la cumbre. Son varios módulos unidos para descansar, pensado como un destino atractivo.
+* Son elementos propios del proyecto: no se usan estructuras que ya existen en el cerro, como las antenas.
+
+El render del prototipo v4 muestra los arcos de colihue en abanico y tres troncos cilíndricos como asientos.
+
+### 3. Orientación según el sol
+
+El cerro tapa el sol de la mañana en la parte baja del sendero, y en la tarde el sol llega desde el poniente, igual que la vista a Santiago. Por eso la mayoría de los tótems de paso abre hacia el S o el SE, y los miradores del filo (T7 y T10) abren al SO con un alero. La orientación de cada uno está en la tabla de la lámina Rev. 4.
+
+| Dato | Tipo |
+|---|---|
+| En la parte baja, el sol directo llega desde las 8:40-9:20 en diciembre y desde las 9:40-10:20 en marzo | Cuanti |
+| Un tótem de paso tipo (radio 2 m, altura 2,2 m) abierto al oeste da sombra solo el 34% del tiempo entre las 14:00 y las 19:00 en diciembre | Cuanti |
+| Abierto al SE o al E, da sombra el 100% del tiempo en la bajada | Cuanti |
+| Un alero de 1 m da sombra hasta las 17:00 mirando al oeste | Cuanti |
+| Abierto al sur, la sombra es pareja durante el día | Cuali |
+
+* Acotación: desde el 09-11-2026 se dice "tótem de paso" y "tótem de cumbre", y lo que lleva la persona ya no es un "clip" sino un **dispositivo** con botón SOS y pantalla.
+* Archivos: render y modelos 3D (STL) del ensamble, los colihues y los asientos en [`Prototipos/Fotos_Maquetas_4/`](Prototipos/Fotos_Maquetas_4)
+
+## Encargos 9 y 10 · Planimetría, maqueta y prototipos (09 al 13-11-2026)
+
+### 1. Alcance y operación (decisiones del equipo, 09-11-2026)
+
+* El proyecto se deja armado para presentarlo a la Municipalidad de La Reina, que decide si lo toma; no es una implementación directa.
+* Se hacen **dos prototipos**: uno funcional, con toda la tecnología operando, y uno estético, que muestra cómo debería verse.
+* Por ahora no es posible ir a terreno: se trabaja con un modelo de terreno (SRTM) y OpenStreetMap.
+* El dispositivo se entrega solo en la caseta, donde se registra a todos; en la entrada principal solo se cobra.
+* A Cerro La Cruz suben pocas personas, no más de 15 por semana, y solo a ellas se monitorea; a quienes hacen recorridos cortos, no.
+* El guardaparque monitorea durante su turno y, ante una emergencia, avisa a Socorro Andino.
+* Pendiente: las rutas cruzadas (gente que sube por Mahuida y baja por otro parque, o al revés). Todavía no se ha conversado con los otros parques.
+
+* Acotación: las 20 a 40 personas por sábado que mencionaron los guardaparques corresponden a todos los senderos de alta dificultad (Cerro La Cruz, Morro La Reina y Cerro San Ramón), no solo a Cerro La Cruz.
+
+### 2. Planimetría topográfica y red LoRa (Rev. 4.1, 09-11-2026)
+
+Lámina A1 a escala 1:10.000 (impresa en A3 queda a 1:20.000) que reemplaza a la Rev. 3. Incluye curvas de nivel cada 25 m, el sendero con marcas cada 0,5 km, los tótems y sus enlaces, los caminos que llegan a Cerro La Cruz, el perfil longitudinal del sendero sin exageración vertical, la tabla de tótems con coordenadas UTM, el cuadro de enlaces, un esquema de accesos a 1:50.000 y los nortes.
+
+**Por qué cambió:** el equipo acordó que el primer tótem estuviera en la caseta (en la Rev. 3 era solo la base), que más puntos es mejor y que los tótems pasaran a ser de paso y de cumbre.
+
+| Dato del sendero | Valor |
+|---|---|
+| Largo caseta → cruz | 6,80 km (GPS) |
+| Cota caseta / cumbre | 908 m / 2.552 m |
+| Desnivel neto / subida acumulada | 1.644 m / ≈1.685 m |
+| Tótems | 11 de paso + 1 de cumbre + T14 opcional |
+| Repetidores | 1 (R1) |
+| Saltos hasta la caseta | Máximo 3 |
+| Radio | LoRa 915–928 MHz, 20 dBm, SF10 |
+
+| Código | Ubicación | km | Cota (m) | Tipo | Envía a |
+|---|---|---|---|---|---|
+| T1 | Caseta de guardaparques | 0,00 | 908 | Caseta, bajo el alero (gateway y PC dentro) | — |
+| T2 | Primera subida | 0,62 | 998 | Tótem de paso, abre al SE | T1 (0,49 km) |
+| T3 | Mirador de la Antena | 1,20 | 1.093 | Tótem de paso, abre al S | T1 (0,69 km) |
+| T4 | Mirador del Guayacán | 1,80 | 1.284 | Tótem de paso, abre al SE | T1 (1,06 km) |
+| T5 | Cruce Morro La Reina / Q. Guayacán | 2,08 | 1.361 | Tótem de paso, abre al SE | T4 (0,22 km) |
+| T6 | Media ladera hacia el Filo | 2,67 | 1.588 | Tótem de paso, abre al S | T1 (1,77 km) |
+| T7 | Mirador del Filo | 3,25 | 1.867 | Tótem de paso, abre al SO, con alero | T1 (2,21 km) |
+| T8 | Filo alto | 3,88 | 1.944 | Tótem de paso, abre al S | T9 (0,39 km) |
+| T9 | Morro La Reina · cruce Sdo. La Cruz | 4,40 | 2.107 | Tótem de paso, abre al S | T4 (1,66 km) |
+| T10 | Cumbre de las Antenas | 5,25 | 2.278 | Tótem de paso, abre al SO, con alero | T7 (1,64 km) |
+| T11 | Tramo de roca (paso de cuerda) | 5,50 | 2.281 | Tótem simple (poste) | T12 (0,61 km) |
+| T12 | Ladera final | 6,28 | 2.429 | Tótem de paso, abre al S | T1 (3,89 km) |
+| T13 | Cumbre / cruz | 6,75 | 2.553 | Tótem de cumbre (módulos unidos) | T7 (2,86 km) |
+| R1 | Repetidor de respaldo | 6,75 | 2.545 | Repetidor | T1 (4,22 km) |
+| T14 | Filo este de la cumbre (opcional) | — | 2.491 | Tótem simple (poste) | T13 (0,35 km) |
+
+| Dato | Tipo |
+|---|---|
+| 14 radios: el tótem de la caseta (T1), 11 tótems de paso, el tótem de cumbre y el repetidor R1; T14 es opcional | Cuanti |
+| Seis tótems llegan directo a la caseta: T2, T3, T4, T6, T7 y T12 | Cuanti |
+| Margen de los enlaces en el modelo: 52 a 77 dB, sin descontar vegetación (se exige ≥ 45 dB) | Cuanti |
+| Enlaces más largos: R1 → caseta, 4,22 km (52 dB), y T12 → caseta, 3,89 km (53 dB) | Cuanti |
+| Además del de Mahuida, 11 caminos llegan a Cerro La Cruz; se juntan con el sendero en los km 0,20, 0,28 y 1,15 y en la cumbre | Cuanti |
+| La prueba de alcance empieza por los cinco enlaces de más de 2 km | Cuali |
+| Hay gente que sube por Mahuida y baja por otra ruta (el dispositivo no vuelve) o que llega por otra ruta sin dispositivo | Cuali |
+
+* Acotación: las curvas salen del modelo SRTM 1" (±10 m), así que es una lámina de anteproyecto, no apta para obra. Cada punto y cada enlace se valida en la prueba de alcance, y la posición final se ajusta en terreno a 10-25 m del sendero.
+* Acotación: el 10-11-2026 se decidió que R1 sea un repetidor con estructura propia en el balcón poniente, 94 m al oeste de la cruz, y no vaya dentro del tótem de cumbre. La lámina todavía lo rotula como "dentro del tótem de cumbre".
+* Archivo: [`encargos/Encargo_9-10/Planimetria_Topografica_Cerro_La_Cruz_Rev4_A1.pdf`](encargos/Encargo_9-10/Planimetria_Topografica_Cerro_La_Cruz_Rev4_A1.pdf)
+
+### 3. Maqueta topográfica de corte láser (10-11-2026)
+
+Maqueta de relieve en capas de MDF o terciado de 3 mm, tomando como referencia la maqueta de Pinnacle Peak Park.
+
+| Dato | Valor |
+|---|---|
+| Medida | 56 × 37 cm, 3,3 cm de alto |
+| Escala | 1:12.500 (1 cm = 125 m) |
+| Capas | Base + 10 capas, una cada 200 m, de 900 a 2.700 m |
+| Piezas | 65, en 5 planchas de 30 × 40 cm |
+| Relieve | SRTM 1" suavizado, ±10 m |
+
+* Capas huecas para ahorrar material: cada capa es solo la franja que queda a la vista más 10 mm donde se apoya la de arriba.
+* Las juntas cambian de lugar entre una capa y otra, como ladrillos, para que cada pieza quede amarrada.
+* Colores del archivo: rojo = cortar, azul = marcar, negro = grabar.
+* Lleva grabados el sendero punteado, los tótems T1 a T13 en su coordenada exacta y las cotas; en la base, el título, la leyenda, la rosa de los vientos, la escala, el perfil del sendero, los integrantes y los profesores.
+* Acotación: el relieve se ve más plano que el real, porque 200 m en horizontal son 16 mm y en vertical son 3 mm (una capa).
+* Archivo: [`encargos/Encargo_9-10/Maqueta_Laser_Cerro_La_Cruz.zip`](encargos/Encargo_9-10/Maqueta_Laser_Cerro_La_Cruz.zip) (planchas en SVG y DXF, guía de armado en PDF y vista previa)
+
+### 4. Prototipo estético del tótem
+
+* Pruebas de material: colihue real cortado en trozos de 20 cm y láminas de madera curvadas que imitan los arcos de colihue.
+* Modelos 3D (STL) del ensamble del tótem en dos versiones: `ENSAMBLE_MAHUIDA_V02.stl` y `ENSAMBLE_MAHUIDA_p01.stl`.
+* Archivos: [`encargos/Encargo_9-10/`](encargos/Encargo_9-10) y fotos en [`encargos/Encargo_9-10/Fotos/`](encargos/Encargo_9-10/Fotos)
+
+### 5. Prototipo funcional: electrónica e interfaz de la caseta
+
+Demostración con dos tótems, un dispositivo físico y la interfaz de la caseta en el computador.
+
+1. En la interfaz, el guardaparque registra a la persona y le asigna un dispositivo; la orden viaja por USB al Tótem 1 y de ahí al dispositivo.
+2. El dispositivo envía su ID, posición GPS, altitud, número de satélites, hora, estado SOS, último tótem y sentido (ida o vuelta).
+3. Al pasar cerca de un tótem, este le confirma el paso y los datos llegan a la interfaz, que actualiza el historial y el perfil del sendero.
+4. Si la persona mantiene el botón SOS 3 s, la interfaz muestra la alerta con su posición. El guardaparque marca "ayuda en camino", luego "emergencia atendida" y al final vuelve el dispositivo a reposo; cada estado le llega al dispositivo.
+5. Al terminar, se desasigna el dispositivo y se descarga el informe del día en CSV.
+
+| Archivo | Qué hace |
+|---|---|
+| `temlora.ino` | Tótem 1, la base de la caseta, conectado por USB al computador. Recibe los datos del dispositivo, registra el paso cuando está a unos 30 cm (RSSI > −48 dBm, con 25 s de espera para no repetir) y entrega cada mensaje al computador como una línea JSON. Reenvía al dispositivo las órdenes de la interfaz: asignar, desasignar, confirmar paso, estados del SOS, encender y apagar |
+| `totem2_XIAO.ino` | Tótem 2 (XIAO ESP32-S3, km 1,4). Detecta el dispositivo con un umbral de −85 dBm, le confirma el paso y reenvía sus datos al Tótem 1. Si el dispositivo está en SOS, lo reenvía aunque esté lejos |
+| `casetaguarda/index.html` | Interfaz "Central Parque Mahuida" en el navegador. Se conecta al Tótem 1 por USB (Web Serial, en Chrome o Edge), registra a la persona (ID, nombre, RUT o pasaporte, teléfono, contacto de emergencia y alergias), asigna y devuelve dispositivos, enciende y apaga su pantalla, y muestra la flota (1 dispositivo físico y 3 simulados), el historial de paso por los tótems, el perfil del sendero y la alerta SOS |
+
+* Acotación: en esta versión toda la comunicación es por ESP-NOW, de corto alcance, tanto entre el dispositivo y los tótems como entre el Tótem 2 y el Tótem 1. Todavía no están el enlace LoRa entre los tótems y la caseta ni el firmware del dispositivo, y el perfil de la interfaz usa 7 tótems de referencia en vez de los 13 de la lámina Rev. 4.
+* Archivos: [`encargos/Encargo_9-10/temlora.ino.zip`](encargos/Encargo_9-10/temlora.ino.zip), [`encargos/Encargo_9-10/totem2_XIAO.ino.zip`](encargos/Encargo_9-10/totem2_XIAO.ino.zip) y [`encargos/Encargo_9-10/casetaguarda.zip`](encargos/Encargo_9-10/casetaguarda.zip)
+
+### 6. Dispositivo
+
+* Tiene botón SOS, con un pitido al activarlo, y una pantalla con el estado, la batería y el avance por el recorrido, que se actualiza al pasar por cada tótem.
+* Usa ESP-NOW para registrarse en cada tótem y llevará LoRa para el SOS.
+* Su carcasa se modeló en 3D en dos formas, ovalada y rectangular, y hay dos modelos 3D con textura del dispositivo completo.
+* Archivos: [`Prototipos/Fotos_Dispositivo_3/`](Prototipos/Fotos_Dispositivo_3)
+
 ## Bibliografía
 
 La lista completa, agrupada por tema, está en [`bibliografia/bibliografias.pdf`](bibliografia/bibliografias.pdf). Principales fuentes:
@@ -688,3 +895,15 @@ La lista completa, agrupada por tema, está en [`bibliografia/bibliografias.pdf`
 
 #### Metodología
 * Dorst, K. (2015). *Frame Innovation: Create New Thinking by Design*. MIT Press.
+
+#### Agregadas en el Certamen 2
+* [Conociendo Chile: visitar el Parque Mahuida](https://conociendochile.cl/visitar-el-parque-mahuida/)
+* [Wikipedia: Parque Mahuida](https://es.wikipedia.org/wiki/Parque_Mahuida)
+* [Wikiloc: Cerro La Cruz por Parque Mahuida](https://es.wikiloc.com/rutas-senderismo/cerro-la-cruz-por-parque-mahuida-28222234)
+* [Garmin: informe anual de SOS de inReach](https://www.garmin.com/es-MX/blog/press-release/el-informe-anual-inreach-sos-destaca-el-valor-de-los-dispositivos-de-comunicacion-por-satelite-de-garmin/)
+
+#### Cartografía (lámina Rev. 4 y maqueta)
+* SRTM 1" (NASA/USGS), modelo de elevación del terreno
+* © colaboradores de OpenStreetMap (ODbL): senderos, caminos, quebradas, construcciones y límites de parques
+* Track GPS del sendero en Wikiloc
+* Esri World Imagery
