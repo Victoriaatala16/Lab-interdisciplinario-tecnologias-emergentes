@@ -41,6 +41,7 @@ La propuesta resultante es un **Sistema de Trazabilidad y Alerta en Montaña** p
 | Certamen 2 | Red de trazabilidad y check-in pasivo | Propuesta en tres partes (dispositivo, tótems y caseta) y primeros prototipos |
 | Nuevo tótem | Maquetas de colihue con sombra y asiento | Tótem de paso y tótem de cumbre, que reemplazan a los 7 checkpoints |
 | Encargos 9 y 10 | Planimetría Rev. 4, maqueta láser y prototipos estético y funcional | 14 radios (13 tótems y un repetidor); demostración con 2 tótems y la interfaz de la caseta |
+| Encargo 11 | Maqueta láser final y página web | Maqueta en 22 piezas con cartela aparte; panel de la caseta publicado en GitHub Pages |
 
 ## Punto de partida · Encargo 1
 
@@ -867,6 +868,52 @@ Demostración con dos tótems, un dispositivo físico y la interfaz de la caseta
 * Usa ESP-NOW para registrarse en cada tótem y llevará LoRa para el SOS.
 * Su carcasa se modeló en 3D en dos formas, ovalada y rectangular, y hay dos modelos 3D con textura del dispositivo completo.
 * Archivos: [`Prototipos/Fotos_Dispositivo_3/`](Prototipos/Fotos_Dispositivo_3)
+
+## Encargo 11 · Maqueta final y página web (20-11-2026)
+
+### 1. Maqueta topográfica: versión para cortar
+
+La maqueta de corte láser de los Encargos 9 y 10 se rearmó para planchas más grandes. Las capas ahora van casi enteras, en vez de en 65 trozos chicos, y los textos que iban grabados en la base pasaron a una cartela aparte.
+
+| Dato | Valor |
+|---|---|
+| Base | 49 × 37 cm |
+| Escala | 1:12.500; una capa cada 200 m, de 900 a 2.700 m, en MDF de 3 mm |
+| Piezas | 22, incluida la cartela |
+| Planchas | 5: 45 × 90, 60 × 45, dos de 60 × 40 y 40 × 40 cm |
+| Capas del archivo | CORTE, GRABADO_LINEA y GRABADO_RELLENO |
+
+* **Maqueta:** lleva grabados las cotas de cada capa, el sendero punteado, los tótems T1 a T13 y el norte.
+* **Cartela (34,5 × 21 cm):** título "Sendero Cerro La Cruz", datos del sendero (caseta 908 m, cumbre 2.552 m, 6,80 km, desnivel neto 1.644 m), leyenda con los 13 tótems y su cota, rosa de los vientos, escala gráfica, perfil del sendero, integrantes, profesores, universidad, ramo y fuentes.
+* Archivos: planchas en DXF y vistas previas en [`encargos/Encargo_11/`](encargos/Encargo_11)
+
+### 2. Página web del panel de la caseta
+
+La interfaz de la caseta se publicó como página web en GitHub Pages, siguiendo la guía del taller de vibecoding: [victoriaatala16.github.io/Lab-interdisciplinario-tecnologias-emergentes](https://victoriaatala16.github.io/Lab-interdisciplinario-tecnologias-emergentes/).
+
+| Sección | Qué muestra |
+|---|---|
+| Inicio de turno | Guardaparque, cerro asignado (Cerro La Cruz; El Litre "próximamente") y modo de datos: simulación o hardware real |
+| Resumen | Ingresos, salidas, personas en el cerro, recorridos completos e incompletos, atenciones y últimos movimientos |
+| Mapa del cerro | Perfil del sendero con la cantidad de senderistas por tótem y el detalle de cada tótem |
+| Senderistas | Lista con ingreso, último tótem, hora, sentido, salida, duración y estado, con filtros |
+| Pulseras y caseta | Conexión con el Tótem 1, asignación y devolución de dispositivos, prueba de SOS y consola técnica |
+| Reportes | Días anteriores, ingresos por franja horaria, tiempo promedio de la ruta y descarga en CSV |
+| Cierre de jornada | Dispositivos devueltos y pendientes, observaciones y respaldo antes de cerrar el turno |
+
+Archivos en la raíz del repositorio, como pide GitHub Pages:
+
+| Archivo | Qué contiene |
+|---|---|
+| `index.html` | Estructura de la página |
+| `styles.css` | Colores, tipografía y forma (design system) |
+| `script.js` | Simulación, conexión con el Tótem 1 y actualización de la vista |
+| `config.js` | Dirección del Tótem 1, sin contraseñas |
+| `firmware/` | Código de los tótems (`temlora.ino` y `totem2_XIAO.ino`); Pages no lo ejecuta |
+| `.nojekyll` y `.gitignore` | Publicar todo tal cual y dejar fuera `secrets.h` |
+
+* Acotación: la página publicada usa https, así que el navegador bloquea la conexión por WiFi con el Tótem 1 (`http://192.168.4.1`). Desde Pages la conexión real tiene que ser por USB (Web Serial, en Chrome o Edge); por ahora la página envía órdenes al tótem por USB, pero todavía no lee sus datos. La simulación funciona completa.
+* Archivo original de la página: [`encargos/Encargo_11/página web.html`](encargos/Encargo_11/p%C3%A1gina%20web.html)
 
 ## Bibliografía
 
