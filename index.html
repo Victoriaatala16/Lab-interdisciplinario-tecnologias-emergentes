@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parque Mahuida · Cerro La Cruz</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ================= LOGIN MINIMALISTA ================= -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="login-mark">PM</div>
+        <h1>Caseta de Control</h1>
+        <p>Parque Mahuida · Monitoreo de Senderos</p>
+      </div>
+
+      <div class="field">
+        <label>Guardaparque</label>
+        <input type="text" id="loginUser" value="Rodrigo Valdés" />
+      </div>
+
+      <div class="field">
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" value="mahuida2026" />
+      </div>
+
+      <div class="field">
+        <label>Cerro asignado</label>
+        <select id="loginCerro">
+          <option value="Cerro La Cruz">Cerro La Cruz</option>
+          <option value="Sendero El Litre" disabled>Sendero El Litre (Próximamente)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Modo de datos</label>
+        <div class="seg-control">
+          <button type="button" class="seg-opt active" id="optLoginSim" onclick="setLoginMode('SIM')">Simulación (12)</button>
+          <button type="button" class="seg-opt" id="optLoginReal" onclick="setLoginMode('REAL')">Hardware Real</button>
+        </div>
+      </div>
+
+      <button class="btn btn-accent" style="margin-top:4px; padding:11px;" onclick="iniciarSesion()">
+        Iniciar turno
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= SIDEBAR LIMPIO ================= -->
+  <aside id="sidebar">
+    <div>
+      <div class="brand-row">
+        <b>Parque Mahuida</b>
+        <select class="cerro-dropdown" id="sidebarCerroSelect">
+          <option value="Cerro La Cruz">Cerro La Cruz</option>
+          <option value="Sendero El Litre" disabled>Sendero El Litre</option>
+        </select>
+      </div>
+
+      <nav class="nav-list">
+        <button class="nav-link active" onclick="abrirVentana('resumen', this)">
+          <span>Resumen</span>
+        </button>
+        <button class="nav-link" onclick="abrirVentana('mapa', this)">
+          <span>Mapa del cerro</span>
+          <span class="nav-count" id="navPillDentro">0</span>
+        </button>
+        <button class="nav-link" onclick="abrirVentana('senderistas', this)">
+          <span>Senderistas</span>
+          <span class="nav-count" id="navPillAlertas">0</span>
+        </button>
+        <button class="nav-link" onclick="abrirVentana('caseta', this)">
+          <span>Pulseras y caseta</span>
+        </button>
+        <button class="nav-link" onclick="abrirVentana('reportes', this)">
+          <span>Reportes</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sidebar-bottom">
+      <div class="guard-meta">
+        <b id="hudGuardName">Guardaparque</b>
+        <span id="hudGuardTurn">Turno activo</span>
+      </div>
+      <button class="btn btn-subtle btn-sm" style="width:100%;" onclick="abrirModalCierreDia()">
+        Finalizar día
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= ÁREA PRINCIPAL ================= -->
+  <div id="main">
+
+    <!-- Banner SOS (solo visible si hay emergencia real o probada) -->
+    <div id="sosBanner">
+      <div class="sos-info">
+        <span class="sos-dot"></span>
+        <span id="sosText"><b>SOS Activo:</b> PULSERA-A (VIKI) en Tótem 1</span>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button class="btn btn-accent btn-sm" onclick="cambiarEstadoSOS('EN_CAMINO')">Ayuda en camino</button>
+        <button class="btn btn-subtle btn-sm" onclick="cambiarEstadoSOS('ATENDIDA')">Atendida</button>
+        <button class="btn btn-subtle btn-sm" onclick="cambiarEstadoSOS('RESET')">Restablecer</button>
+      </div>
+    </div>
+
+    <!-- Topbar Limpia -->
+    <header class="topbar">
+      <h1 id="pageTitle">Resumen</h1>
+      <div class="topbar-right">
+        <button id="btnModeChip" class="status-chip sim" onclick="alternarModoDatos()">
+          <span class="status-dot"></span>
+          <span id="modeChipText">Simulación</span>
+        </button>
+        <button id="btnWifiChip" class="status-chip" onclick="alternarConexionWifi()">
+          <span class="status-dot"></span>
+          <span id="wifiChipText">Tótem 1 desconectado</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="content-area">
+
+      <!-- ============ 1. RESUMEN ============ -->
+      <section id="view-resumen" class="view active">
+        <div class="metrics-row">
+          <div class="metric-cell" onclick="irASenderistasConFiltro('TODOS')">
+            <label><span class="dot-ind" style="background:var(--info);"></span> Ingresos</label>
+            <div class="val" id="kpiIngresos">0</div>
+          </div>
+          <div class="metric-cell" onclick="irASenderistasConFiltro('COMPLETO')">
+            <label><span class="dot-ind" style="background:var(--sage);"></span> Salidas</label>
+            <div class="val" id="kpiSalidas">0</div>
+          </div>
+          <div class="metric-cell" onclick="irASenderistasConFiltro('EN_RECORRIDO')">
+            <label><span class="dot-ind" style="background:var(--info);"></span> En el cerro</label>
+            <div class="val" id="kpiDentro">0</div>
+          </div>
+          <div class="metric-cell" onclick="irASenderistasConFiltro('COMPLETO')">
+            <label><span class="dot-ind" style="background:var(--sage);"></span> Completos</label>
+            <div class="val" id="kpiCompletos">0</div>
+          </div>
+          <div class="metric-cell" onclick="irASenderistasConFiltro('INCOMPLETO')">
+            <label><span class="dot-ind" style="background:var(--warn);"></span> Incompletos</label>
+            <div class="val" id="kpiIncompletos">0</div>
+          </div>
+          <div class="metric-cell" onclick="irASenderistasConFiltro('ATENCION')">
+            <label><span class="dot-ind" style="background:var(--danger);"></span> Atención</label>
+            <div class="val" id="kpiAtencion">0</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="section-block">
+            <div class="section-title">
+              <span>Requieren revisión</span>
+              <span id="resumenAlertCount">0</span>
+            </div>
+            <div class="clean-list" id="resumenAttentionList"></div>
+          </div>
+
+          <div class="section-block">
+            <div class="section-title">
+              <span>Últimos movimientos</span>
+              <span>Hora de paso y sentido</span>
+            </div>
+            <div class="clean-list" id="resumenMovesList"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 2. MAPA DEL CERRO ============ -->
+      <section id="view-mapa" class="view">
+        <div class="topo-grid">
+          <div class="panel">
+            <div class="section-title" style="margin-bottom:14px;">
+              <span>Cerro La Cruz (T1 a T12) · Cantidad de senderistas por tótem</span>
+              <span>Recorrido est. 6 – 8 hrs (máx. 10h)</span>
+            </div>
+            <svg id="topoSvg" viewBox="0 0 920 340">
+              <defs>
+                <linearGradient id="gradCerro" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#e59a24" stop-opacity="0.45"/>
+                  <stop offset="100%" stop-color="#e59a24" stop-opacity="0.0"/>
+                </linearGradient>
+              </defs>
+              <line x1="55" y1="285" x2="895" y2="285" class="axis-line" />
+              <text x="14" y="289" fill="#52525b" font-size="10">810m</text>
+              <line x1="55" y1="205" x2="895" y2="205" class="axis-line" />
+              <text x="14" y="209" fill="#52525b" font-size="10">1.300m</text>
+              <line x1="55" y1="125" x2="895" y2="125" class="axis-line" />
+              <text x="14" y="129" fill="#52525b" font-size="10">1.800m</text>
+              <line x1="55" y1="45" x2="895" y2="45" class="axis-line" />
+              <text x="14" y="49" fill="#52525b" font-size="10">2.295m</text>
+
+              <path d="M 85 285 L 155 265 L 225 242 L 295 218 L 365 194 L 435 172 L 505 150 L 575 128 L 645 106 L 715 85 L 785 65 L 865 45 L 865 305 L 85 305 Z" class="profile-fill" />
+              <path d="M 85 285 L 155 265 L 225 242 L 295 218 L 365 194 L 435 172 L 505 150 L 575 128 L 645 106 L 715 85 L 785 65 L 865 45" class="profile-line" />
+
+              <g id="totemsGroup"></g>
+              <g id="sendersGroup"></g>
+            </svg>
+          </div>
+
+          <div class="panel" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="section-title">
+              <span>Detalle del tótem</span>
+              <span>Clic en T1–T12</span>
+            </div>
+            <div id="totemInspector" style="font-size:0.81rem; color:var(--muted); line-height:1.5;">
+              Haz clic en cualquier tótem o indicador numérico del mapa para ver quiénes pasaron por ese punto, la hora exacta y si van de ida o de vuelta.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 3. SENDERISTAS ============ -->
+      <section id="view-senderistas" class="view">
+        <div class="toolbar">
+          <input type="text" class="search-box" id="searchSenderista" placeholder="Buscar pulsera o nombre..." oninput="renderTablaSenderistas()" />
+          <div class="tabs-inline">
+            <button class="tab-pill active" onclick="setFiltroSenderistas('TODOS', this)">Todos</button>
+            <button class="tab-pill" onclick="setFiltroSenderistas('EN_RECORRIDO', this)">En recorrido</button>
+            <button class="tab-pill" onclick="setFiltroSenderistas('COMPLETO', this)">Completos</button>
+            <button class="tab-pill" onclick="setFiltroSenderistas('INCOMPLETO', this)">Incompletos</button>
+            <button class="tab-pill" onclick="setFiltroSenderistas('ATENCION', this)">Atención</button>
+          </div>
+        </div>
+
+        <div class="clean-list">
+          <table class="table-minimal">
+            <thead>
+              <tr>
+                <th>Senderista</th>
+                <th>Ingreso</th>
+                <th>Último tótem · Hora · Sentido</th>
+                <th>Sin marca</th>
+                <th>Salida / Duración</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tbodySenderistas"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ 4. PULSERAS Y CASETA ============ -->
+      <section id="view-caseta" class="view">
+        <div class="hw-split">
+          <div class="panel" style="display:flex; flex-direction:column; gap:16px;">
+            <div class="section-title">
+              <span>Pulsera física A</span>
+              <span id="hwConnStatus">Desconectada</span>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <button class="btn btn-subtle" onclick="controlarFisicaDirecto(true)">Encender pantalla</button>
+              <button class="btn btn-subtle" onclick="controlarFisicaDirecto(false)">Apagar pantalla</button>
+              <button class="btn btn-subtle" onclick="conectarTotemUSB()">Conectar USB</button>
+              <button class="btn btn-danger-ghost" onclick="simularSOSPrueba()">Probar SOS</button>
+            </div>
+
+            <div style="border-top:1px solid var(--border); padding-top:12px;">
+              <button class="btn btn-subtle btn-sm" style="width:100%;" onclick="document.getElementById('terminalLog').classList.toggle('open')">
+                Mostrar / ocultar consola técnica
+              </button>
+              <div class="log-drawer" id="terminalLog">
+                [CASETA] Consola lista.
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="display:flex; flex-direction:column; gap:14px;">
+            <div class="section-title">
+              <span>Asignación de pulsera</span>
+            </div>
+            <div class="form-grid">
+              <div class="field">
+                <label>Dispositivo</label>
+                <select id="regPulsera">
+                  <option value="PULSERA-A">Pulsera A (Física)</option>
+                  <option value="PULSERA-13">Pulsera 13 (Demo)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>ID en pantalla</label>
+                <input type="text" id="regId" value="VIKI" />
+              </div>
+              <div class="field">
+                <label>Nombre</label>
+                <input type="text" id="regNombre" value="Victoria Lagos" />
+              </div>
+              <div class="field">
+                <label>RUT / Pasaporte</label>
+                <input type="text" id="regRut" value="20.891.244-1" />
+              </div>
+              <div class="field">
+                <label>Teléfono</label>
+                <input type="text" id="regFono" value="+56 9 8472 1102" />
+              </div>
+              <div class="field">
+                <label>Contacto emergencia</label>
+                <input type="text" id="regEmergencia" value="+56 9 9341 5589" />
+              </div>
+              <div class="field" style="grid-column: span 2;">
+                <label>Observaciones</label>
+                <input type="text" id="regSalud" value="Sin antecedentes" />
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:4px;">
+              <button class="btn btn-accent" style="flex:1;" onclick="asignarDispositivo()">Asignar pulsera</button>
+              <button class="btn btn-subtle" onclick="desasignarSeleccionada()">Devolver</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 5. REPORTES ============ -->
+      <section id="view-reportes" class="view">
+        <div class="toolbar">
+          <select id="reportDateSelect" class="cerro-dropdown" style="width:220px; margin:0; padding:8px 12px;" onchange="renderReporteDiario()">
+            <option value="HOY">Hoy · 18 Nov 2026</option>
+            <option value="AYER">Ayer · 17 Nov 2026 (9)</option>
+            <option value="DOMINGO">Domingo · 15 Nov 2026 (14)</option>
+          </select>
+          <button class="btn btn-subtle" onclick="exportarExcelEstructurado('HOY')">
+            Descargar Excel (.CSV)
+          </button>
+        </div>
+
+        <div class="metrics-row" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="metric-cell">
+            <label>Ingresos</label>
+            <div class="val" id="repIngresos">0</div>
+          </div>
+          <div class="metric-cell">
+            <label>Completos</label>
+            <div class="val" id="repCompletos">0</div>
+          </div>
+          <div class="metric-cell">
+            <label>Incompletos</label>
+            <div class="val" id="repIncompletos">0</div>
+          </div>
+          <div class="metric-cell">
+            <label>Tiempo promedio ruta</label>
+            <div class="val" id="repTiempoProm">7h 18m</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="section-title">
+            <span>Ingresos por franja horaria</span>
+            <span>Cerro La Cruz · Est. 6 a 8 hrs (máx. 10h)</span>
+          </div>
+          <div class="chart-bars" id="hourlyChart"></div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- ================= MODAL FINALIZAR DÍA Y CIERRE ================= -->
+  <div class="backdrop" id="cierreDiaModal">
+    <div class="modal-center">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 style="font-size:1rem; font-weight:600;">Cierre de jornada</h3>
+          <span id="cierreGuardSub" style="font-size:0.75rem; color:var(--muted);">Guardaparque</span>
+        </div>
+        <button class="btn btn-subtle btn-sm" onclick="cerrarModalCierreDia()">✕</button>
+      </div>
+
+      <div class="arqueo-row">
+        <div class="arqueo-cell">
+          <span>Ingresos</span>
+          <b id="cierreIngresos">0</b>
+        </div>
+        <div class="arqueo-cell">
+          <span>Devueltas</span>
+          <b id="cierreDevueltas">0</b>
+        </div>
+        <div class="arqueo-cell">
+          <span>Pendientes</span>
+          <b id="cierrePendientes" style="color:var(--warn);">0</b>
+        </div>
+      </div>
+
+      <div id="cierreAlertaBox" class="notice-line"></div>
+
+      <div class="field">
+        <label>Observaciones de cierre</label>
+        <textarea id="cierreNotas" rows="2" placeholder="Novedades del turno..."></textarea>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn btn-subtle" id="btnDescargarCierre" onclick="descargarExcelParaCierre()">
+          1. Descargar Excel de respaldo
+        </button>
+        <button class="btn btn-accent" id="btnConfirmarFinDia" disabled onclick="ejecutarFinDiaYCerrarSesion()">
+          2. Finalizar día y cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DRAWER FICHA SENDERISTA ================= -->
+  <div class="backdrop" id="senderDrawer" onclick="if(event.target.id==='senderDrawer') this.classList.remove('open')">
+    <div class="drawer-right">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--border); padding-bottom:14px;">
+        <div>
+          <h3 id="drawerName" style="font-size:1rem; font-weight:600;">Senderista</h3>
+          <span id="drawerSub" style="font-size:0.75rem; color:var(--muted);">Detalle</span>
+        </div>
+        <button class="btn btn-subtle btn-sm" onclick="document.getElementById('senderDrawer').classList.remove('open')">✕</button>
+      </div>
+      <div id="drawerBody" style="display:flex; flex-direction:column; gap:16px; font-size:0.81rem;"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
